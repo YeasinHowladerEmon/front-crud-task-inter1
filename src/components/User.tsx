@@ -6,6 +6,8 @@ import { useGetAllUsersQuery, useGetFiltersUserQuery, useGetPagePaginationUserQu
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { useAppDispatch } from "../redux/hook";
+import { userAdd } from "../redux/features/Team/teamSlice";
 
 type Input = {
   searchValue: string;
@@ -13,8 +15,8 @@ type Input = {
 const User = () => {
 
   const { register, handleSubmit } = useForm<Input>()
+  const dispatch = useAppDispatch();
   const [dataF, setDataF] = useState([])
-  const [user, setUser] = useState<IUser[] | undefined>([])
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [gender, setGender] = useState<string>('')
@@ -28,7 +30,6 @@ const User = () => {
 
   const { data: allUsersdata, isLoading: allUsersLoading, isError: allUsersError, refetch, } = useGetAllUsersQuery({page:currentPage})
 
-  // console.log(isFetching, isSuccess, currentData, allUsersdata);
 
   const { data: searchUserData, isLoading: searchUserLoading, isError: searchUserError } = useGetSearchUserQuery(searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1), {
     skip: searchTerm.trim() === ''
@@ -45,14 +46,7 @@ const User = () => {
   const { data: pageUserData, isLoading: pageUserLoading, isError: pageUserError } = useGetPagePaginationUserQuery(currentPage)
 
 
-  // const userData: IUser[] | undefined = (
-  //   filterUserData?.data ||
-  //   searchUserData?.data ||
-  //   pageUserData?.data ||
-  //   allUsersdata?.data
-  // const userData = filterUserData?.data ? filterUserData?.data : searchUserData?.data ? searchUserData?.data : pageUserData?.data ? pageUserData?.data : allUsersdata?.data
-  // console.log(allUsersdata?.data)
-  console.log(allUsersdata?.data)
+  
   let data: IUser[] | undefined;
 
   if (filterUserData?.data) {
@@ -75,10 +69,7 @@ const User = () => {
     console.log('all2', data);
   }
 
-  console.log(data);
 
-
-  // );
   const isLoadings = filterUserLoading ? filterUserLoading : searchUserLoading ? searchUserLoading : pageUserLoading ? pageUserLoading : allUsersLoading;
   const isErrors = filterUserError ? filterUserError : searchUserError ? searchUserError : pageUserError ? pageUserError : allUsersError;
 
@@ -90,7 +81,7 @@ const User = () => {
   }
 
 
-  // console.log(userData);
+
   const onSubmit: SubmitHandler<Input> = data => {
     if (data.searchValue.trim() !== '') {
       setSearchTerm(data.searchValue.trim())
@@ -98,7 +89,6 @@ const User = () => {
   }
   // get data some experiment
   useEffect(() => {
-
     axios.get('http://localhost:5000/api/v1/users')
       .then((response) => {
         // Handle the response data
@@ -110,7 +100,15 @@ const User = () => {
         console.error('Error fetching books:', error);
       });
     refetch() // refetch the data from redux toolkit
-  }, [allUsersdata?.data, filterUserData?.data, pageUserData?.data, refetch, searchUserData?.data])
+  }, [refetch])
+
+const handleAddToTeam = (user: IUser) => {
+dispatch(userAdd(user))
+toast.success('successfulty added to team')
+}
+
+
+
   return (
     <div >
       <div className='grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-1 grid-cols-1 mt-20 justify-items-center'>
@@ -161,7 +159,10 @@ const User = () => {
                     <p className='text-black font-semibold' >Domain: {user.domain}</p>
                     <p className='text-black font-semibold'>Gender: {user.gender}</p>
                     <p className="text-black font-semibold">{user.available ? 'Available' : 'Unavailable'}</p>
-                    <Link to={`/user-details/${user._id}`} className="btn btn-secondary" >View</Link>
+                    <div className='flex'>
+                    <Link to={`/user-details/${user._id}`} className="btn btn-secondary mr-auto" >View</Link>
+                    <button  className="btn btn-secondary ml-auto" onClick={() => handleAddToTeam(user)}>Add To Team</button>
+                    </div>
                   </div>
                 </div>
               ))

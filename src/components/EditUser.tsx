@@ -19,7 +19,7 @@ const EditUser = () => {
         formState: { errors },
     } = useForm<IUserInputs>();
     const [userUpdate] = useUserUpdateMutation()
-    // console.log(user?.data?.accessToken);
+
     console.log(user);
 
     useEffect(() => {
@@ -57,9 +57,9 @@ const EditUser = () => {
         reset()
     };
     return (
-        <div className="container mt-10">
-            <div className='grid grid-cols-2 gap-4 justify-center '>
-                <form onSubmit={handleSubmit(onSubmit)} className="space-y-8 ">
+        <div className="mt-10">
+            <div className='grid grid-cols-1 justify-items-center'>
+                <form onSubmit={handleSubmit(onSubmit)} className="lg:w-[20%] md:w-[40%] w-[100%]">
                     <div>
                         <label className='label'>First Name</label>
                         <input type="text" className="input input-bordered input-primary w-full max-w-xs" placeholder="First name" defaultValue={user?.data.first_name}  {...register('first_name', { required: 'First Name is required' })} />

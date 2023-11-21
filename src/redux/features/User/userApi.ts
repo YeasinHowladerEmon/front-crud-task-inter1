@@ -1,9 +1,13 @@
-import { IUser } from "../../../interface/interface";
+import { ITeam, IUser } from "../../../interface/interface";
 import { api } from "../../api/apiSlice";
 
 export interface GetUserResponse {
   data: IUser[];
 }
+export interface GetTeamResponse {
+  data: ITeam[];
+}
+
 export const UserApi = api.injectEndpoints({
   endpoints: (builder) => ({
     singleDetails: builder.query({
@@ -52,7 +56,6 @@ export const UserApi = api.injectEndpoints({
         method: "PATCH",
         body: data
       }),
-      invalidatesTags: ["user"]
     }),
     userDelete: builder.mutation({
       query: ({ id }) => ({
@@ -66,7 +69,22 @@ export const UserApi = api.injectEndpoints({
         method: "POST",
         body: data
       })
-    })
+    }),
+    createTeam: builder.mutation({
+      query: ({ data }) => ({
+        url: `/teams/create-team`,
+        method: "POST",
+        body: data
+      })
+    }),
+    singleTeamDetails: builder.query({
+      query: (id) => `/teams/${id}`
+    }),
+    getAllTeam: builder.query<GetTeamResponse, void>({
+      query: () => `/teams`,
+      providesTags: ["team"]
+    }),
+
   })
 });
 
@@ -76,7 +94,10 @@ export const {
   useGetPagePaginationUserQuery,
   useGetSearchUserQuery,
   useGetFiltersUserQuery,
+  useSingleTeamDetailsQuery,
+  useGetAllTeamQuery,
   useUserUpdateMutation,
   useUserDeleteMutation,
-  useCreateUserMutation
+  useCreateUserMutation,
+  useCreateTeamMutation
 } = UserApi;
