@@ -23,7 +23,7 @@ const TeamDetails = () => {
             <div className='grid lg:grid-cols-3 md:grid-cols-1 grid-cols-1 justify-center mt-20'>
                 {
                     team?.data?.members.map((user: IUser) => (
-                        <div className="card card-compact w-80 bg-white shadow-xl mb-5 mx-15">
+                        <div className="card card-compact w-80 bg-white shadow-xl mb-5 mx-15" key={user._id}>
                             <figure><img src={user?.avatar} alt="Shoes" /></figure>
                             <div className="card-body">
                                 <h2 className="card-title text-black text-3xl">Name: {user?.first_name}{" "} {user?.last_name}</h2>

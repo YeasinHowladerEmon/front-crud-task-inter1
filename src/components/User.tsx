@@ -1,13 +1,13 @@
 
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { IUser } from "../interface/interface";
-import { useGetAllUsersQuery, useGetFiltersUserQuery, useGetPagePaginationUserQuery, useGetSearchUserQuery } from '../redux/features/User/userApi'
-import { useForm, SubmitHandler } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { SubmitHandler, useForm } from "react-hook-form";
 import toast, { Toaster } from "react-hot-toast";
-import { useAppDispatch } from "../redux/hook";
+import { Link } from "react-router-dom";
+import { IUser } from "../interface/interface";
 import { userAdd } from "../redux/features/Team/teamSlice";
+import { useGetAllUsersQuery, useGetFiltersUserQuery, useGetPagePaginationUserQuery, useGetSearchUserQuery } from '../redux/features/User/userApi';
+import { useAppDispatch } from "../redux/hook";
 
 type Input = {
   searchValue: string;
@@ -28,7 +28,7 @@ const User = () => {
 
   //search and filters and page pagination with all users
 
-  const { data: allUsersdata, isLoading: allUsersLoading, isError: allUsersError, refetch, } = useGetAllUsersQuery({page:currentPage})
+  const { data: allUsersdata, isLoading: allUsersLoading, isError: allUsersError, refetch, } = useGetAllUsersQuery({ page: currentPage })
 
 
   const { data: searchUserData, isLoading: searchUserLoading, isError: searchUserError } = useGetSearchUserQuery(searchTerm.charAt(0).toUpperCase() + searchTerm.slice(1), {
@@ -46,7 +46,7 @@ const User = () => {
   const { data: pageUserData, isLoading: pageUserLoading, isError: pageUserError } = useGetPagePaginationUserQuery(currentPage)
 
 
-  
+
   let data: IUser[] | undefined;
 
   if (filterUserData?.data) {
@@ -89,7 +89,7 @@ const User = () => {
   }
   // get data some experiment
   useEffect(() => {
-    axios.get('http://localhost:5000/api/v1/users')
+    axios.get('https://state-managment-server.vercel.app/api/v1/users')
       .then((response) => {
         // Handle the response data
         setDataF(response.data.data);
@@ -97,15 +97,15 @@ const User = () => {
       })
       .catch((error) => {
         // Handle any errors that occurred during the request
-        console.error('Error fetching books:', error);
+        console.error('Error fetching :', error);
       });
     refetch() // refetch the data from redux toolkit
   }, [refetch])
 
-const handleAddToTeam = (user: IUser) => {
-dispatch(userAdd(user))
-toast.success('successfulty added to team')
-}
+  const handleAddToTeam = (user: IUser) => {
+    dispatch(userAdd(user))
+    toast.success('successfulty added to team')
+  }
 
 
 
@@ -160,8 +160,8 @@ toast.success('successfulty added to team')
                     <p className='text-black font-semibold'>Gender: {user.gender}</p>
                     <p className="text-black font-semibold">{user.available ? 'Available' : 'Unavailable'}</p>
                     <div className='flex'>
-                    <Link to={`/user-details/${user._id}`} className="btn btn-secondary mr-auto" >View</Link>
-                    <button  className="btn btn-secondary ml-auto" onClick={() => handleAddToTeam(user)}>Add To Team</button>
+                      <Link to={`/user-details/${user._id}`} className="btn btn-secondary mr-auto" >View</Link>
+                      <button className="btn btn-secondary ml-auto" onClick={() => handleAddToTeam(user)}>Add To Team</button>
                     </div>
                   </div>
                 </div>

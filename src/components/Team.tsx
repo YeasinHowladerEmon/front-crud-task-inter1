@@ -18,7 +18,7 @@ const Team = () => {
     }, [refetch])
     console.log(data?.data)
     return (
-        <div className="container-x mt-5">
+        <div className="lg:container-x mt-5">
             <div><h2 className="text-center text-white">Team</h2></div>,
             <div className='grid lg:grid-cols-3 md:grid-cols-1 grid-cols-1 mt-20 mb-5 justify-items-center'>
                 {
