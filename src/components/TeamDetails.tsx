@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useSingleTeamDetailsQuery } from '../redux/features/User/userApi';
 import { IUser } from '../interface/interface';
